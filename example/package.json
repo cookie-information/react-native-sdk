@@ -9,8 +9,12 @@
     "ios": "expo run:ios",
     "web": "expo start --web"
   },
+  "expo": {
+    "autolinking": {
+      "nativeModulesDir": ".."
+    }
+  },
   "dependencies": {
-    "@cookieinformation/react-native-sdk": "^0.5.0",
     "expo": "~53.0.26",
     "react": "19.0.0",
     "react-native": "0.79.6",
