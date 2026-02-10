@@ -1,0 +1,27 @@
+{
+  "name": "cookieinformationrnsdkexample",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "./start.sh",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
+  },
+  "expo": {
+    "autolinking": {
+      "nativeModulesDir": ".."
+    }
+  },
+  "dependencies": {
+    "expo": "~53.0.25",
+    "react": "19.0.0",
+    "react-native": "0.79.6",
+    "tsx": "~4.20.3"
+  },
+  "devDependencies": {
+    "@types/react": "~19.0.10",
+    "babel-plugin-module-resolver": "^5.0.2"
+  }
+}

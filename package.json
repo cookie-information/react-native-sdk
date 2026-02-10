@@ -1,0 +1,73 @@
+{
+  "name": "@cookieinformation/react-native-sdk",
+  "version": "0.2.2",
+  "description": "Cookie Information consent management SDK for React Native",
+  "private": false,
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build/",
+    "android/build.gradle",
+    "android/src/",
+    "ios/",
+    "expo-module.config.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "lint": "expo-module lint",
+    "test": "expo-module test",
+    "prepare": "expo-module prepare",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module",
+    "open:ios": "xed example/ios",
+    "open:android": "open -a \"Android Studio\" example/android",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "react-native-cookie-information-consents-sdk",
+    "CookieInformationRNSDK"
+  ],
+  "repository": "https://github.com/cookie-information/react-native-sdk",
+  "bugs": {
+    "url": "https://github.com/cookie-information/react-native-sdk/issues"
+  },
+  "author": "CookieInformation",
+  "license": "MIT",
+  "homepage": "https://github.com/cookie-information/react-native-sdk#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "expo-module-scripts": "~4.1.10",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "~5.8.3"
+  },
+  "dependencies": {
+    "expo": "^54.0.33",
+    "react": "^19.2.4",
+    "react-native": "^0.83.1"
+  },
+  "peerDependencies": {
+    "expo": "^54.0.33",
+    "react": "^19.2.4",
+    "react-native": "^0.83.1"
+  }
+}
