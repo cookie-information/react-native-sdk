@@ -27,7 +27,7 @@ yarn add @cookieinformation/react-native-sdk
 After installing, rebuild the native project (Expo Go is not supported — a native build is required):
 
 ```bash
-npx expo prebuild --clean
+npx expo prebuild
 npx expo run:ios   # or run:android
 ```
 
