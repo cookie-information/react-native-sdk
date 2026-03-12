@@ -2,9 +2,19 @@
 
 React Native wrapper for the Cookie Information Mobile Consents SDKs.
 
+> **Expo only** — This package is built as an [Expo module](https://docs.expo.dev/modules/overview/) and requires Expo. It does **not** support bare React Native projects that do not use Expo.
+
 Native SDKs:
 - Android: https://github.com/cookie-information/android-release
 - iOS: https://github.com/cookie-information/ios-release
+
+## Requirements
+
+| Peer dependency | Version |
+| --- | --- |
+| `expo` | `~53.0.26` |
+| `react-native` | `0.79.6` |
+| `react` | `19.0.0` |
 
 ## Installation
 
@@ -12,6 +22,13 @@ Native SDKs:
 npm install @cookieinformation/react-native-sdk
 # or
 yarn add @cookieinformation/react-native-sdk
+```
+
+After installing, rebuild the native project (Expo Go is not supported — a native build is required):
+
+```bash
+npx expo prebuild --clean
+npx expo run:ios   # or run:android
 ```
 
 # Using the SDK
