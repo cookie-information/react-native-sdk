@@ -1,27 +1,44 @@
-const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
+const exclusionList =
+  require('metro-config/private/defaults/exclusionList').default;
+const escape = require('escape-string-regexp');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const pak = require('../package.json');
 
-const config = getDefaultConfig(__dirname);
+const root = path.resolve(__dirname, '..');
 
-// Find the project and workspace directories
-const projectRoot = __dirname;
-const workspaceRoot = path.resolve(projectRoot, '..');
+const modules = Object.keys({
+  ...pak.peerDependencies,
+});
 
-// 1. Watch all files within the monorepo
-config.watchFolders = [workspaceRoot];
+const defaultConfig = getDefaultConfig(__dirname);
 
-// 2. Let Metro know where to resolve packages and in what order
-config.resolver.nodeModulesPaths = [
-  path.resolve(projectRoot, 'node_modules'),
-  path.resolve(workspaceRoot, 'node_modules'),
-];
+const config = {
+  projectRoot: __dirname,
+  watchFolders: [root],
 
-// 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
-config.resolver.disableHierarchicalLookup = true;
+  resolver: {
+    blockList: exclusionList(
+      modules.map(
+        (m) =>
+          new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`)
+      )
+    ),
 
-// 4. Force Metro to use Node file watcher instead of watchman
-// This prevents watchman case sensitivity errors on macOS
-// Setting useWatchman to false makes Metro skip watchman entirely
-config.resolver.useWatchman = false;
+    extraNodeModules: modules.reduce((acc, name) => {
+      acc[name] = path.join(__dirname, 'node_modules', name);
+      return acc;
+    }, {}),
+  },
 
-module.exports = config;
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
+    }),
+  },
+};
+
+module.exports = mergeConfig(defaultConfig, config);

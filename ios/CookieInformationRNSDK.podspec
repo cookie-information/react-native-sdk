@@ -18,13 +18,19 @@ Pod::Spec.new do |s|
   s.source         = { git: 'https://github.com/cookie-information/react-native-sdk' }
   s.static_framework = true
 
-  s.dependency 'ExpoModulesCore'
-  s.dependency 'MobileConsentsSDK'
+  s.dependency 'React-Core'
+  s.dependency 'MobileConsentsSDK', '1.5.8'
 
-  # Swift/Objective-C compatibility
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
   }
 
   s.source_files = "**/*.{h,m,mm,swift,hpp,cpp}"
+  s.exclude_files = "Tests/**/*"
+
+  s.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'Tests/*Tests.swift'
+    test_spec.platforms = { :ios => '15.1' }
+    test_spec.requires_app_host = true
+  end
 end

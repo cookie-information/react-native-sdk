@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# SourceTree and other GUI git clients use a minimal PATH without Node/npm.
+if ! command -v npm >/dev/null 2>&1; then
+  export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+  if [ -s "$HOME/.nvm/nvm.sh" ]; then
+    # shellcheck disable=SC1090
+    . "$HOME/.nvm/nvm.sh"
+  fi
+  if [ -s "$HOME/.fnm/env" ]; then
+    # shellcheck disable=SC1090
+    . "$HOME/.fnm/env"
+  fi
+fi
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "husky - pre-commit: npm not found in PATH" >&2
+  echo "husky - commit from Terminal, or add Node to PATH in SourceTree settings" >&2
+  exit 127
+fi
+
+npx lint-staged && npm run typescript

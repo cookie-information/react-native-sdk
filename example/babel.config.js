@@ -1,17 +1,16 @@
-module.exports = function (api) {
-  api.cache(true);
+const path = require('path');
 
-  return {
-    presets: ['babel-preset-expo'],
-    plugins: [
-      [
-        'module-resolver',
-        {
-          alias: {
-            '@cookieinformation/react-native-sdk': '../src',
-          },
+module.exports = {
+  presets: ['module:@react-native/babel-preset'],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        extensions: ['.tsx', '.ts', '.js', '.json'],
+        alias: {
+          '@cookieinformation/react-native-sdk': path.join(__dirname, '..', 'src'),
         },
-      ],
+      },
     ],
-  };
+  ],
 };

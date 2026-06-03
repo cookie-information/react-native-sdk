@@ -12,12 +12,15 @@ interface ConsentItemDisplay {
   accepted?: boolean;
 }
 
+function formatError(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
 const { initialize, showPrivacyPopUp, showPrivacyPopUpIfNeeded, acceptAllConsents, removeStoredConsents, cacheConsentSolution, synchronizeIfNeeded, getSavedConsents, saveConsents } = MobileConsent;
 
 export default function App() {
   const [statusNote, setStatusNote] = useState<string>('Standing by');
   const [consentInfo, setConsentInfo] = useState<ConsentItemDisplay[] | null>(null);
-  const [consentSolutionVersionId, setConsentSolutionVersionId] = useState<string | null>(null);
 
   useEffect(() => {
     /*
@@ -70,10 +73,10 @@ export default function App() {
       enableNetworkLogger: true,
     })
       .then(() => setStatusNote('SDK initialized'))
-      .catch((e) => {
+      .catch((e: unknown) => {
         console.error('Initialize error:', e);
         setStatusNote('Init failed');
-        Alert.alert('Issue', `Unable to initialize SDK: ${e}`);
+        Alert.alert('Issue', `Unable to initialize SDK: ${formatError(e)}`);
       });
   }, []);
 
@@ -83,7 +86,7 @@ export default function App() {
       console.log('Accept all response:', result);
       const consentsList = Array.isArray(result?.consents) ? result.consents : null;
       const consentNames = consentsList
-        ? consentsList.map((c) => c.title).join(', ')
+        ? consentsList.map((c: ConsentItem) => c.title).join(', ')
         : Object.keys(result ?? {}).join(', ');
       const savedCount = consentsList ? result.count : Object.keys(result ?? {}).length;
 
@@ -92,10 +95,10 @@ export default function App() {
         'All set',
         `Saved ${savedCount} consents:\n${consentNames}`
       );
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Accept all error:', e);
       setStatusNote('Accept all failed');
-      Alert.alert('Issue', `Unable to save consents: ${e}`);
+      Alert.alert('Issue', `Unable to save consents: ${formatError(e)}`);
     }
   };
 
@@ -107,10 +110,10 @@ export default function App() {
       setTimeout(() => {
         Alert.alert('Done', 'Consent dialog completed');
       }, 300);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Consent dialog error:', e);
       setStatusNote('Consent dialog failed');
-      Alert.alert('Issue', `Unable to open consent dialog: ${e}`);
+      Alert.alert('Issue', `Unable to open consent dialog: ${formatError(e)}`);
     }
   };
 
@@ -122,10 +125,10 @@ export default function App() {
       setTimeout(() => {
         Alert.alert('Done', 'Consent flow completed (pop-up shown only if needed).');
       }, 300);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Consent if needed error:', e);
       setStatusNote('Consent check failed');
-      Alert.alert('Issue', `Unable to run consent check: ${e}`);
+      Alert.alert('Issue', `Unable to run consent check: ${formatError(e)}`);
     }
   };
 
@@ -136,10 +139,10 @@ export default function App() {
       setStatusNote('Local consents removed');
       setConsentInfo(null);
       Alert.alert('Done', 'Stored consents have been removed from this device.');
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Remove stored consents error:', e);
       setStatusNote('Remove failed');
-      Alert.alert('Issue', `Unable to remove stored consents: ${e}`);
+      Alert.alert('Issue', `Unable to remove stored consents: ${formatError(e)}`);
     }
   };
 
@@ -148,48 +151,42 @@ export default function App() {
       await synchronizeIfNeeded();
       setStatusNote('Sync finished');
       Alert.alert('Done', 'Consent sync completed.');
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Sync error:', e);
       setStatusNote('Sync failed');
-      Alert.alert('Issue', `Unable to sync consents: ${e}`);
+      Alert.alert('Issue', `Unable to sync consents: ${formatError(e)}`);
     }
   };
 
   const runCacheConsentSolution = async () => {
     try {
-      const result = await cacheConsentSolution();
-      const items = Array.isArray(result?.consentItems) ? result.consentItems : [];
+      const consentItems = await cacheConsentSolution();
+      const items = Array.isArray(consentItems) ? consentItems : [];
       const count = items.length;
-      const versionId =
-        typeof result?.consentSolutionVersionId === 'string'
-          ? result.consentSolutionVersionId
-          : null;
       setStatusNote(`Cached ${count} consent item(s)`);
       setConsentInfo(items as ConsentItemDisplay[]);
-      setConsentSolutionVersionId(versionId);
       Alert.alert('Done', `Consent solution cached. ${count} item(s) available.`);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Cache consent solution error:', e);
       setStatusNote('Cache failed');
       setConsentInfo(null);
-      setConsentSolutionVersionId(null);
-      Alert.alert('Issue', `Unable to cache consent solution: ${e}`);
+      Alert.alert('Issue', `Unable to cache consent solution: ${formatError(e)}`);
     }
   };
 
   const runGetSavedConsents = async () => {
     try {
-      const result = await getSavedConsents();
-      const items = Array.isArray(result?.consentItems) ? result.consentItems : [];
+      const consentItems = await getSavedConsents();
+      const items = Array.isArray(consentItems) ? consentItems : [];
       const count = items.length;
       setStatusNote(`Read ${count} saved consent(s)`);
       setConsentInfo(items as ConsentItemDisplay[]);
       Alert.alert('Done', `${count} consent(s) in local storage.`);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Get saved consents error:', e);
       setStatusNote('Read failed');
       setConsentInfo(null);
-      Alert.alert('Issue', `Unable to read saved consents: ${e}`);
+      Alert.alert('Issue', `Unable to read saved consents: ${formatError(e)}`);
     }
   };
 
@@ -201,14 +198,14 @@ export default function App() {
         return;
       }
       const customData = { device_id: 'example-device' } as Record<string, string>;
-      const result = await saveConsents(items as ConsentItem[], customData, null, consentSolutionVersionId);
+      const result = await saveConsents(items as ConsentItem[], customData, null);
       const count = result?.savedCount ?? items.length;
       setStatusNote(`Consent saved (${count} item(s))`);
       Alert.alert('Done', `Consent sent to the server. Saved ${count} item(s).`);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error('Save consents error:', e);
       setStatusNote('Save consents failed');
-      Alert.alert('Issue', `Unable to save consents: ${e}`);
+      Alert.alert('Issue', `Unable to save consents: ${formatError(e)}`);
     }
   };
 

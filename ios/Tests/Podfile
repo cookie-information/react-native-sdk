@@ -1,0 +1,45 @@
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', File.expand_path('../..', __dir__)]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+install! 'cocoapods', :deterministic_uuids => false
+
+workspace 'CookieInformationRNSDKTests'
+
+react_native_path = '../../node_modules/react-native'
+repo_root = '../..'
+
+target 'CookieInformationRNSDKTestsHost' do
+  project 'CookieInformationRNSDKTests.xcodeproj'
+
+  use_react_native!(
+    :path => react_native_path,
+    :app_path => repo_root
+  )
+
+  pod 'CookieInformationRNSDK', :path => '..'
+  pod 'MobileConsentsSDK', :git => 'https://github.com/cookie-information/ios-release.git', :tag => '1.5.8'
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      react_native_path,
+      :mac_catalyst_enabled => false
+    )
+  end
+end
+
+target 'CookieInformationRNSDKTests' do
+  project 'CookieInformationRNSDKTests.xcodeproj'
+
+  use_modular_headers!
+  inherit! :search_paths
+
+  pod 'CookieInformationRNSDK', :path => '..', :testspecs => ['Tests']
+  pod 'MobileConsentsSDK', :git => 'https://github.com/cookie-information/ios-release.git', :tag => '1.5.8'
+end

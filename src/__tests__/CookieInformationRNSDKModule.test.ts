@@ -10,12 +10,20 @@ const mockNative = {
   saveConsents: jest.fn(),
 };
 
-jest.mock('expo', () => ({
-  NativeModule: class {},
-  requireNativeModule: () => mockNative,
+const platformSelect = jest.fn(
+  (spec: { ios?: string; default?: string }) => spec.default ?? ''
+);
+
+jest.mock('react-native', () => ({
+  NativeModules: {
+    CookieInformationRNSDK: mockNative,
+  },
+  Platform: {
+    select: platformSelect,
+  },
 }));
 
-const MobileConsent = require('../CookieInformationRNSDKModule').default;
+import MobileConsent from '../CookieInformationRNSDKModule';
 
 describe('CookieInformationRNSDKModule', () => {
   beforeEach(() => {
@@ -49,8 +57,42 @@ describe('CookieInformationRNSDKModule', () => {
   });
 
   it('passes null defaults for saveConsents optional arguments', () => {
-    const items = [{ id: 1, universalId: 'u', title: 't', description: 'd', required: false, type: 'custom', accepted: true }];
+    const items = [
+      {
+        id: 1,
+        universalId: 'u',
+        title: 't',
+        description: 'd',
+        required: false,
+        type: 'custom',
+        accepted: true,
+      },
+    ];
     MobileConsent.saveConsents(items);
-    expect(mockNative.saveConsents).toHaveBeenCalledWith(items, null, null, null);
+    expect(mockNative.saveConsents).toHaveBeenCalledWith(items, null, null);
+  });
+
+  describe('when native module is not linked', () => {
+    it('throws a readable linking error when a method is called', () => {
+      jest.resetModules();
+      jest.doMock('react-native', () => ({
+        NativeModules: {},
+        Platform: {
+          select: (spec: { ios?: string; default?: string }) =>
+            spec.default ?? '',
+        },
+      }));
+
+      const MobileConsentUnlinked =
+        require('../CookieInformationRNSDKModule').default;
+
+      expect(() =>
+        MobileConsentUnlinked.initialize({
+          clientId: 'client',
+          clientSecret: 'secret',
+          solutionId: 'solution',
+        })
+      ).toThrow("doesn't seem to be linked");
+    });
   });
 });
