@@ -1,0 +1,11 @@
+Pods/
+build/
+DerivedData/
+*.xcworkspace
+!CookieInformationRNSDKTests.xcworkspace/contents.xcworkspacedata
+Podfile.lock
+*.xcuserstate
+xcuserdata/
+
+# Xcode
+.xcode.env.local

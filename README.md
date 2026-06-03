@@ -8,13 +8,16 @@ Native SDKs:
 
 ## Installation
 
+Install the package in your React Native app.
+
 ```bash
 npm install @cookieinformation/react-native-sdk
 # or
 yarn add @cookieinformation/react-native-sdk
 ```
 
-# Using the SDK
+iOS: run `cd ios && pod install`.
+Android: no extra install step is required; rebuild the app (Gradle autolinking).
 
 ## Initializing
 
@@ -104,11 +107,9 @@ showPrivacyPopUp(): Promise<TrackingConsents>
 
 ```ts
 const consents = await MobileConsent.showPrivacyPopUp();
-
-// Return type: TrackingConsents (Record<string, boolean | undefined>)
-// TrackingConsents is a map of consent choices keyed by purpose/category:
-// - keys: necessary, functional, statistical, marketing, custom (plus any custom keys)
-// - values: boolean (true/false) or undefined
+// Returns TrackingConsents.
+// Keys are consent category types (e.g. necessary, marketing).
+// Values are true if accepted, false if declined, or undefined if not set.
 // Example return shape:
 // {
 //   necessary: true,
@@ -117,7 +118,7 @@ const consents = await MobileConsent.showPrivacyPopUp();
 //   marketing: false,
 //   custom: true
 // }
-
+// Use the result to enable/disable SDKs
 if (consents.marketing) {
   // enable marketing SDKs
 } else {
@@ -139,7 +140,17 @@ showPrivacyPopUpIfNeeded(
 
 ```ts
 const consents = await MobileConsent.showPrivacyPopUpIfNeeded();
-
+// Returns TrackingConsents.
+// Keys are consent category types (e.g. necessary, marketing).
+// Values are true if accepted, false if declined, or undefined if not set.
+// Example return shape:
+// {
+//   necessary: true,
+//   functional: false,
+//   statistical: true,
+//   marketing: false,
+//   custom: true
+// }
 // Use the result to enable/disable SDKs
 if (consents.marketing) {
   // enable marketing SDKs
@@ -156,8 +167,8 @@ const consents = await MobileConsent.showPrivacyPopUpIfNeeded({
   userId: 'user_123', // optional on Android
 });
 
-// Example: read custom keys or localized titles
-if (consents['Age Consent']) {
+// Example: read custom consent category
+if (consents.custom) {
   // handle custom consent item
 }
 ```
@@ -182,7 +193,7 @@ If the default consent UI does not fit your product, you can build your own cust
 All methods return Promises and must be called after `initialize()`.
 
 ### initialize
-Initialize the native SDKs before calling any other method.
+Initialize the native SDKs before calling any other method; it refreshes SDK setup and clears the cached consent solution template, which is repopulated on the next `cacheConsentSolution` or consent UI call. It does not clear stored user consent choices; use `removeStoredConsents` to reset those.
 
 ```ts
 initialize(options: InitializeOptions): Promise<void>
@@ -190,15 +201,17 @@ initialize(options: InitializeOptions): Promise<void>
 
 ### cacheConsentSolution
 
-Fetches the latest consent solution from the server. On iOS, it also returns `consentSolutionVersionId` which you must pass to `saveConsents` when sending consents manually. Use the returned `consentItems` to build your own UI if needed.
+Fetches the latest consent solution from the server and caches it for custom UI flows. Use the returned items to build your own UI if needed.
+
+Your app needs the consent solution configuration (items, version) to build custom UI and to save choices. `cacheConsentSolution` fetches that configuration from the server and stores a snapshot; it does not hold the user’s accept/decline selections—those are saved when you post consents via `saveConsents` or the built-in UI, and read with `getSavedConsents`. When using custom UI, call `cacheConsentSolution` first, then pass items with updated `accepted` values to `saveConsents`. `initialize` clears the solution template cache (repopulated on the next `cacheConsentSolution` or consent UI call); `removeStoredConsents` clears stored user choices only.
 
 ```ts
-cacheConsentSolution(): Promise<{ consentItems: ConsentItem[]; consentSolutionVersionId?: string }>
+cacheConsentSolution(): Promise<ConsentItem[]>
 ```
 
 ```ts
-const { consentItems, consentSolutionVersionId } =
-  await MobileConsent.cacheConsentSolution();
+const consentItems = await MobileConsent.cacheConsentSolution();
+// Return type: ConsentItem[]
 
 // Example usage: build your own UI from consentItems
 const itemsForUi = consentItems.map((item) => ({
@@ -211,39 +224,34 @@ const itemsForUi = consentItems.map((item) => ({
 
 ### saveConsents
 
-Submits the selected consent items to the server and stores them locally. On iOS, you must pass `consentSolutionVersionId` from `cacheConsentSolution` (or a known version). On Android, `consentSolutionVersionId` is ignored.
+Submits the selected consent items to the server and stores them locally.
 
 Parameters:
-- `consentItems`: List of consent items to save.
-- `customData`: Optional custom data (e.g. email, device_id).
+- `consentItems`: List of items to save. You can pass `ConsentItem[]` directly from `cacheConsentSolution` or `getSavedConsents` to `saveConsents` on both platforms. The SDK reads only two fields from each item: the identifier (`id` on Android, `universalId` on iOS) and `accepted`. All other fields are ignored.
+- `customData`: Optional custom data (e.g. email, device_id). iOS only; ignored on Android.
 - `userId`: Android only, optional user id; omit or pass `null` for anonymous user. Ignored on iOS.
-- `consentSolutionVersionId`: iOS only, optional version id override when already known.
 
 ```ts
 saveConsents(
   consentItems: ConsentItem[],
   customData?: Record<string, string> | null,
-  userId?: string | null,
-  consentSolutionVersionId?: string | null
+  userId?: string | null
 ): Promise<SaveConsentsResponse>
 ```
 
 ```ts
-const { consentItems, consentSolutionVersionId } =
-  await MobileConsent.cacheConsentSolution();
+const consentItems = await MobileConsent.cacheConsentSolution();
 
 await MobileConsent.saveConsents(
   consentItems,
   { device_id: 'example-device' },
-  'user_123', // optional userId on Android
-  consentSolutionVersionId
+  'user_123' // optional userId on Android
 );
 ```
 
 Notes:
-- On iOS, `consentSolutionVersionId` is required and can be obtained from `cacheConsentSolution()` or passed explicitly.
-- On Android, `consentSolutionVersionId` is ignored.
 - `userId` is optional on Android; pass `null` or omit for anonymous user.
+- Call `cacheConsentSolution` first, then pass items (with updated `accepted` values) to `saveConsents`. A prior cache is required on both platforms.
 
 ### getSavedConsents
 
@@ -255,16 +263,16 @@ Parameters:
 - `userId`: Android only, optional user id; omit or pass `null` for anonymous user. Ignored on iOS.
 
 ```ts
-getSavedConsents(userId?: string | null): Promise<{ consentItems: ConsentItem[] }>
+getSavedConsents(userId?: string | null): Promise<ConsentItem[]>
 ```
 
 ```ts
-const { consentItems } = await MobileConsent.getSavedConsents();
-// Return type: { consentItems: ConsentItem[] }
+const consentItems = await MobileConsent.getSavedConsents();
+// Return type: ConsentItem[]
 ```
 
 ### acceptAllConsents
-Fetches the solution and saves “accept all” consents.
+Accepts all consent categories as accepted, then saves the result to the server and local storage. Uses the consent solution configuration the SDK has loaded (from `initialize` and, when used, `cacheConsentSolution`).
 
 Parameters:
 - `userId`: Android only, optional user id; omit or pass `null` for anonymous user. Ignored on iOS.
@@ -274,7 +282,7 @@ acceptAllConsents(userId?: string | null): Promise<AcceptAllConsentsResponse>
 ```
 
 ### removeStoredConsents
-Deletes stored consents on the device (does not delete server data).
+Removes the user's saved consent choices from the device. Does not delete server-side consent records.
 
 Parameters:
 - `userId`: Android only, optional user id; omit or pass `null` for anonymous user. Ignored on iOS.
@@ -292,9 +300,23 @@ synchronizeIfNeeded(): Promise<void>
 
 ## Types (summary)
 
-```ts
-type TrackingConsents = Record<string, boolean | undefined>;
+Returned by `showPrivacyPopUp` and `showPrivacyPopUpIfNeeded` (see Privacy Pop-Up examples above). Keys are consent category ids (same as `ConsentItem.type`); values are `true` (accepted), `false` (declined), or `undefined` if not set. Import as `TrackingConsents`:
 
+```ts
+{
+  necessary?: boolean;
+  marketing?: boolean;
+  statistical?: boolean;
+  functional?: boolean;
+  custom?: boolean;
+  [key: string]: boolean | undefined; // e.g. "privacy policy"
+}
+
+One consent purpose from your solution. Returned by `getSavedConsents`, `cacheConsentSolution`, `acceptAllConsents`, and `saveConsents`.
+
+You can pass `ConsentItem[]` directly from `cacheConsentSolution` or `getSavedConsents` to `saveConsents` on both platforms. The SDK reads only two fields from each item: the identifier (`id` on Android, `universalId` on iOS) and `accepted`. All other fields are ignored. On iOS, returned items always have `id: 0`; use `universalId` as the consent item identifier.
+
+```ts
 interface ConsentItem {
   id: number;
   universalId: string;
@@ -304,10 +326,12 @@ interface ConsentItem {
   type: string;
   accepted: boolean;
 }
+```
 
 interface SaveConsentsResponse {
-  success: true;
+  success: boolean;
   savedCount: number;
+  consents: ConsentItem[];
 }
 ```
 
@@ -315,23 +339,36 @@ interface SaveConsentsResponse {
 
 Enable network logging on iOS via `enableNetworkLogger: true` in `initialize()`.
 
+## Developing this package
+
+From the repository root:
+
+```bash
+npm install
+npm run lint
+npm run typescript
+npm test
+npm run build
+```
+
 ## Running the example app
 
-The example app lives in `example/` and requires a native build (Expo Go is not supported).
+The example app lives in `example/` and uses bare React Native (native build required).
 
 ```bash
 # from repo root
 npm install
 cd example
 npm install
+cd ios && pod install && cd ..
 
-# generate native projects (first time or after native changes)
-npx expo prebuild --clean
+# Metro (separate terminal)
+npm start
 
 # run on device/simulator
-npx expo run:ios
+npm run ios
 # or
-npx expo run:android
+npm run android
 ```
 
 Notes:
@@ -349,5 +386,4 @@ If something is missing or you want to change something, let us know.
 
 ## Release automation
 
-- GitHub Actions publish requires `NPM_TOKEN` repository secret.
 - Release tags must match the `package.json` version (format `X.Y.Z`).

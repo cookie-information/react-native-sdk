@@ -1,67 +1,71 @@
-apply plugin: 'com.android.library'
-
-group = 'expo.modules.mobileconsentssdk'
-version = '0.1.0'
-
-def nodeBinary = (findProperty("NODE_BINARY") ?: System.getenv("NODE_BINARY") ?: "node")
-
-// Dynamic resolution for Expo modules core plugin (monorepo compatible)
-def expoModulesCorePluginFile = new File(
-        providers.exec {
-          workingDir(rootDir)
-          commandLine(nodeBinary, "--print", "require.resolve('expo-modules-core/package.json')")
-        }.standardOutput.asText.get().trim(),
-        "../android/ExpoModulesCorePlugin.gradle"
-)
-
-apply from: expoModulesCorePluginFile
-applyKotlinExpoModulesCorePlugin()
-useCoreDependencies()
-useExpoPublishing()
-
-// If you want to use the managed Android SDK versions from expo-modules-core, set this to true.
-// The Android SDK versions will be bumped from time to time in SDK releases and may introduce breaking changes in your module code.
-// Most of the time, you may like to manage the Android SDK versions yourself.
-def useManagedAndroidSdkVersions = false
-if (useManagedAndroidSdkVersions) {
-  useDefaultAndroidSdkVersions()
-} else {
-  buildscript {
-    // Simple helper that allows the root project to override versions declared by this library.
-    ext.safeExtGet = { prop, fallback ->
-      rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
-    }
-  }
-  project.android {
-    compileSdkVersion safeExtGet("compileSdkVersion", 34)
-    defaultConfig {
-      minSdkVersion safeExtGet("minSdkVersion", 21)
-      targetSdkVersion safeExtGet("targetSdkVersion", 34)
-    }
-  }
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
+group = 'com.cookieinformation.reactnative'
+version = '1.1.0'
+
+def resolveReactNativeVersion() {
+    if (rootProject.ext.has("reactNativeVersion")) {
+        return rootProject.ext.get("reactNativeVersion")
+    }
+
+    def packageJsonCandidates = [
+        file("$rootDir/../node_modules/react-native/package.json"),
+        file("$rootDir/../../../react-native/package.json"),
+    ]
+
+    def packageJson = packageJsonCandidates.find { it.exists() }
+    if (packageJson != null) {
+        return new groovy.json.JsonSlurper().parseText(packageJson.text)['version']
+    }
+
+    return null
+}
+
+def reactNativeVersion = resolveReactNativeVersion()
+
 android {
-  namespace "expo.modules.mobileconsentssdk"
-  defaultConfig {
-    versionCode 1
-    versionName "0.1.0"
-  }
-  lintOptions {
-    abortOnError false
-  }
+    namespace "com.cookieinformation.reactnative"
+    compileSdkVersion 36
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.1.0"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 }
 
 dependencies {
-  implementation 'androidx.activity:activity-compose:1.8.2'
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-  
-  // Cannot upgrade further as the latest architecture (3.0.x) does not expose the ability to accept all consents.
-  implementation "com.cookieinformation:mobileconsents:3.0.1"
-  implementation "com.cookieinformation:core:0.0.13"
+    if (reactNativeVersion != null) {
+        compileOnly "com.facebook.react:react-android:${reactNativeVersion}"
+    } else {
+        // Resolved by the host app's React Native Gradle Plugin when autolinked.
+        compileOnly "com.facebook.react:react-android"
+    }
+    implementation platform("androidx.compose:compose-bom:2024.12.01")
+    implementation "androidx.activity:activity-compose:1.9.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
 
-  // Add these Compose Material3 dependencies
-  implementation "androidx.compose.material3:material3:1.1.2"
-  implementation "androidx.compose.material3:material3-window-size-class:1.1.2"
-  implementation "androidx.compose.ui:ui:1.4.3"
+    implementation "com.cookieinformation:mobileconsents:3.1.0"
+    implementation "com.cookieinformation:core:1.0.0"
+
+    implementation "androidx.compose.material3:material3"
+    implementation "androidx.compose.material3:material3-window-size-class"
+    implementation "androidx.compose.ui:ui"
 }

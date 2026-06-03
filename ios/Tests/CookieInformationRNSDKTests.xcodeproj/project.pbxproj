@@ -1,0 +1,583 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		18D07BED9D6DE2AB63446F8D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7F110902D07DB7F3B51CF800 /* PrivacyInfo.xcprivacy */; };
+		8125B21631CE2EFEBDD04B6A /* libPods-CookieInformationRNSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82F7B0D6385A488195BBCD5F /* libPods-CookieInformationRNSDKTests.a */; };
+		B9B9989DCC794B02A535317D /* libPods-CookieInformationRNSDKTestsHost.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB7CC136FB24AE9037DF64AE /* libPods-CookieInformationRNSDKTestsHost.a */; };
+		C7F0B496F19366B8A71D8AFA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062895C7D688C7A3EC0D3569 /* AppDelegate.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C38A26CA4F14F3F2D70A6EAC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AF3341764BF66CFCB173F4D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E392D6C92881517DFFFE6610;
+			remoteInfo = CookieInformationRNSDKTestsHost;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		037DCB97EB634D90F52A4052 /* CookieInformationRNSDKTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CookieInformationRNSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		062895C7D688C7A3EC0D3569 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2BBA77ACE0E78B2094A0FB32 /* Pods-CookieInformationRNSDKTestsHost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CookieInformationRNSDKTestsHost.release.xcconfig"; path = "Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost.release.xcconfig"; sourceTree = "<group>"; };
+		461F21EAC36BCC1325827E1F /* CookieInformationRNSDKTestsHost.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CookieInformationRNSDKTestsHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F110902D07DB7F3B51CF800 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		82F7B0D6385A488195BBCD5F /* libPods-CookieInformationRNSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CookieInformationRNSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		875CD48B1F1021E8C408D8D1 /* Pods-CookieInformationRNSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CookieInformationRNSDKTests.release.xcconfig"; path = "Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests.release.xcconfig"; sourceTree = "<group>"; };
+		C743665E7DDF0915A3D9ACFC /* Pods-CookieInformationRNSDKTestsHost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CookieInformationRNSDKTestsHost.debug.xcconfig"; path = "Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost.debug.xcconfig"; sourceTree = "<group>"; };
+		DB7CC136FB24AE9037DF64AE /* libPods-CookieInformationRNSDKTestsHost.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CookieInformationRNSDKTestsHost.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEE31CA535085CC6FC61C85B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FB0D61F5570D9569E7E73236 /* Pods-CookieInformationRNSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CookieInformationRNSDKTests.debug.xcconfig"; path = "Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27CCC982490F548137CF456F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9B9989DCC794B02A535317D /* libPods-CookieInformationRNSDKTestsHost.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50BADEC028B715B19DD504F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8125B21631CE2EFEBDD04B6A /* libPods-CookieInformationRNSDKTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1AFAA601B93017432ED72800 = {
+			isa = PBXGroup;
+			children = (
+				1C5283560E906FE205DF5DC2 /* Host */,
+				54CE78488DA18915B71A067F /* Products */,
+				7F110902D07DB7F3B51CF800 /* PrivacyInfo.xcprivacy */,
+				46E6412A9111FCF89A562B94 /* Pods */,
+				266DB4E6FCE8ED74F5603481 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		1C5283560E906FE205DF5DC2 /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				062895C7D688C7A3EC0D3569 /* AppDelegate.swift */,
+				EEE31CA535085CC6FC61C85B /* Info.plist */,
+			);
+			path = Host;
+			sourceTree = "<group>";
+		};
+		266DB4E6FCE8ED74F5603481 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				82F7B0D6385A488195BBCD5F /* libPods-CookieInformationRNSDKTests.a */,
+				DB7CC136FB24AE9037DF64AE /* libPods-CookieInformationRNSDKTestsHost.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		46E6412A9111FCF89A562B94 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FB0D61F5570D9569E7E73236 /* Pods-CookieInformationRNSDKTests.debug.xcconfig */,
+				875CD48B1F1021E8C408D8D1 /* Pods-CookieInformationRNSDKTests.release.xcconfig */,
+				C743665E7DDF0915A3D9ACFC /* Pods-CookieInformationRNSDKTestsHost.debug.xcconfig */,
+				2BBA77ACE0E78B2094A0FB32 /* Pods-CookieInformationRNSDKTestsHost.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		54CE78488DA18915B71A067F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				037DCB97EB634D90F52A4052 /* CookieInformationRNSDKTests.xctest */,
+				461F21EAC36BCC1325827E1F /* CookieInformationRNSDKTestsHost.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E392D6C92881517DFFFE6610 /* CookieInformationRNSDKTestsHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9FE903FD16721ABB36CBF53 /* Build configuration list for PBXNativeTarget "CookieInformationRNSDKTestsHost" */;
+			buildPhases = (
+				E0CCAFCD2980E8E43FF1A3D2 /* [CP] Check Pods Manifest.lock */,
+				78D4AB6524E771BC7B7C429B /* Sources */,
+				155DD56AA4F7FF973737FFA6 /* Resources */,
+				27CCC982490F548137CF456F /* Frameworks */,
+				210AFE673C80F270F6FDA960 /* [CP] Embed Pods Frameworks */,
+				04D9F688E4631851C25E24D3 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CookieInformationRNSDKTestsHost;
+			productName = CookieInformationRNSDKTestsHost;
+			productReference = 461F21EAC36BCC1325827E1F /* CookieInformationRNSDKTestsHost.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E4192FB15633A15DD33894BD /* CookieInformationRNSDKTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22C8E9092CFB0CE03CC2D870 /* Build configuration list for PBXNativeTarget "CookieInformationRNSDKTests" */;
+			buildPhases = (
+				7F89746C69413F93A7971F7D /* [CP] Check Pods Manifest.lock */,
+				649A5C74FD6A5FB266A44D04 /* Sources */,
+				50BADEC028B715B19DD504F4 /* Frameworks */,
+				F996202D9CF34C2A620458FE /* [CP] Embed Pods Frameworks */,
+				D95F7A83B39BBA866EC3A326 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7E39782DCB8EC9742A262D73 /* PBXTargetDependency */,
+			);
+			name = CookieInformationRNSDKTests;
+			productName = CookieInformationRNSDKTests;
+			productReference = 037DCB97EB634D90F52A4052 /* CookieInformationRNSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3AF3341764BF66CFCB173F4D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 1C2194C691613DE3F09CF2A2 /* Build configuration list for PBXProject "CookieInformationRNSDKTests" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 1AFAA601B93017432ED72800;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 54CE78488DA18915B71A067F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E4192FB15633A15DD33894BD /* CookieInformationRNSDKTests */,
+				E392D6C92881517DFFFE6610 /* CookieInformationRNSDKTestsHost */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		155DD56AA4F7FF973737FFA6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18D07BED9D6DE2AB63446F8D /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		04D9F688E4631851C25E24D3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		210AFE673C80F270F6FDA960 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTestsHost/Pods-CookieInformationRNSDKTestsHost-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7F89746C69413F93A7971F7D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CookieInformationRNSDKTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D95F7A83B39BBA866EC3A326 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0CCAFCD2980E8E43FF1A3D2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CookieInformationRNSDKTestsHost-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F996202D9CF34C2A620458FE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CookieInformationRNSDKTests/Pods-CookieInformationRNSDKTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		649A5C74FD6A5FB266A44D04 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78D4AB6524E771BC7B7C429B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7F0B496F19366B8A71D8AFA /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7E39782DCB8EC9742A262D73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E392D6C92881517DFFFE6610 /* CookieInformationRNSDKTestsHost */;
+			targetProxy = C38A26CA4F14F3F2D70A6EAC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		271CAB623FA621A66269B440 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C743665E7DDF0915A3D9ACFC /* Pods-CookieInformationRNSDKTestsHost.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Host/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cookieinformation.rnsdk.tests.host;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.4;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2801BFEBFB23A3543F4DB62D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FB0D61F5570D9569E7E73236 /* Pods-CookieInformationRNSDKTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cookieinformation.rnsdk.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CookieInformationRNSDKTestsHost.app/CookieInformationRNSDKTestsHost";
+			};
+			name = Debug;
+		};
+		405C04264E82C73981BEE28B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(inherited)",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				USE_HERMES = true;
+			};
+			name = Release;
+		};
+		49BEBA562EF29F43C577AB77 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(inherited)",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				USE_HERMES = true;
+			};
+			name = Debug;
+		};
+		4D564D67B2B852CAE485A70F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 875CD48B1F1021E8C408D8D1 /* Pods-CookieInformationRNSDKTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cookieinformation.rnsdk.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CookieInformationRNSDKTestsHost.app/CookieInformationRNSDKTestsHost";
+			};
+			name = Release;
+		};
+		AA523E45F575A2B77F8D7353 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2BBA77ACE0E78B2094A0FB32 /* Pods-CookieInformationRNSDKTestsHost.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Host/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cookieinformation.rnsdk.tests.host;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.4;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C2194C691613DE3F09CF2A2 /* Build configuration list for PBXProject "CookieInformationRNSDKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49BEBA562EF29F43C577AB77 /* Debug */,
+				405C04264E82C73981BEE28B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		22C8E9092CFB0CE03CC2D870 /* Build configuration list for PBXNativeTarget "CookieInformationRNSDKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2801BFEBFB23A3543F4DB62D /* Debug */,
+				4D564D67B2B852CAE485A70F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C9FE903FD16721ABB36CBF53 /* Build configuration list for PBXNativeTarget "CookieInformationRNSDKTestsHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				271CAB623FA621A66269B440 /* Debug */,
+				AA523E45F575A2B77F8D7353 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3AF3341764BF66CFCB173F4D /* Project object */;
+}

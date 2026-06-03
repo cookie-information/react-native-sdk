@@ -1,0 +1,22 @@
+name: CookieInformationRNSDKTests
+options:
+  bundleIdPrefix: com.cookieinformation.rnsdk
+  deploymentTarget:
+    iOS: "15.1"
+targets:
+  CookieInformationRNSDKTestsHost:
+    type: application
+    platform: iOS
+    sources:
+      - Host
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.cookieinformation.rnsdk.tests.host
+      SWIFT_VERSION: "5.4"
+  CookieInformationRNSDKTests:
+    type: bundle.unit-test
+    platform: iOS
+    dependencies:
+      - target: CookieInformationRNSDKTestsHost
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.cookieinformation.rnsdk.tests
+      SWIFT_VERSION: "6.0"
