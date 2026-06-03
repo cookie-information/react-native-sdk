@@ -6,6 +6,16 @@ Native SDKs:
 - Android: https://github.com/cookie-information/android-release
 - iOS: https://github.com/cookie-information/ios-release
 
+## Requirements
+
+| Requirement | Version |
+| --- | --- |
+| `react` (peer dependency) | `>=19.0.0 <20` |
+| `react-native` (peer dependency) | `>=0.79.0 <0.87.0` |
+| Node.js | `>=20` |
+| iOS | 15.1+ |
+| Android | API level 21+ (minSdk 21) |
+
 ## Installation
 
 Install the package in your React Native app.
