@@ -1,6 +1,7 @@
-import { View, StyleSheet, ScrollView, Alert, Text, SafeAreaView, Pressable } from 'react-native';
+import { View, StyleSheet, ScrollView, Alert, Text, Pressable } from 'react-native';
 import MobileConsent, { type ConsentItem } from '@cookieinformation/react-native-sdk';
 import React, { useEffect, useState } from 'react';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 interface ConsentItemDisplay {
   id: number | string;
@@ -221,53 +222,55 @@ export default function App() {
   ];
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Consent Workspace</Text>
-          <Text style={styles.subtitle}>Tools for managing consent actions</Text>
-        </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.screen}>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Consent Workspace</Text>
+            <Text style={styles.subtitle}>Tools for managing consent actions</Text>
+          </View>
 
-        <View style={styles.statusCard}>
-          <Text style={styles.statusLabel}>Latest status</Text>
-          <Text style={styles.statusValue}>{statusNote}</Text>
-        </View>
+          <View style={styles.statusCard}>
+            <Text style={styles.statusLabel}>Latest status</Text>
+            <Text style={styles.statusValue}>{statusNote}</Text>
+          </View>
 
-        <Text style={styles.sectionTitle}>Quick Actions</Text>
-        <View style={styles.actionGrid}>
-          {actions.map((item) => (
-            <Pressable key={item.title} style={styles.actionCard} onPress={item.onPress}>
-              <Text style={styles.actionTitle}>{item.title}</Text>
-              <Text style={styles.actionSubtitle}>{item.subtitle}</Text>
-            </Pressable>
-          ))}
-        </View>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <View style={styles.actionGrid}>
+            {actions.map((item) => (
+              <Pressable key={item.title} style={styles.actionCard} onPress={item.onPress}>
+                <Text style={styles.actionTitle}>{item.title}</Text>
+                <Text style={styles.actionSubtitle}>{item.subtitle}</Text>
+              </Pressable>
+            ))}
+          </View>
 
-        {consentInfo != null && consentInfo.length > 0 && (
-          <>
-            <Text style={styles.sectionTitle}>Cached consent items</Text>
-            <View style={styles.consentInfoCard}>
-              <Text style={styles.consentInfoSummary}>
-                {consentInfo.length} item(s): {consentInfo.map((c) => c.title).join(', ')}
-              </Text>
-              {consentInfo.map((c, i) => (
-                <View key={i} style={styles.consentInfoRow}>
-                  <Text style={styles.consentInfoTitle}>{c.title}</Text>
-                  <Text style={styles.consentInfoMeta}>
-                    type: {c.type ?? '—'} · required: {c.required ? 'yes' : 'no'}
-                    {c.accepted != null ? ` · accepted: ${c.accepted}` : ''}
-                  </Text>
-                  {c.description ? (
-                    <Text style={styles.consentInfoDesc} numberOfLines={2}>{c.description}</Text>
-                  ) : null}
-                </View>
-              ))}
-            </View>
-          </>
-        )}
+          {consentInfo != null && consentInfo.length > 0 && (
+            <>
+              <Text style={styles.sectionTitle}>Cached consent items</Text>
+              <View style={styles.consentInfoCard}>
+                <Text style={styles.consentInfoSummary}>
+                  {consentInfo.length} item(s): {consentInfo.map((c) => c.title).join(', ')}
+                </Text>
+                {consentInfo.map((c, i) => (
+                  <View key={i} style={styles.consentInfoRow}>
+                    <Text style={styles.consentInfoTitle}>{c.title}</Text>
+                    <Text style={styles.consentInfoMeta}>
+                      type: {c.type ?? '—'} · required: {c.required ? 'yes' : 'no'}
+                      {c.accepted != null ? ` · accepted: ${c.accepted}` : ''}
+                    </Text>
+                    {c.description ? (
+                      <Text style={styles.consentInfoDesc} numberOfLines={2}>{c.description}</Text>
+                    ) : null}
+                  </View>
+                ))}
+              </View>
+            </>
+          )}
 
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

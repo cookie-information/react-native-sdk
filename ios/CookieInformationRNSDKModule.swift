@@ -43,7 +43,7 @@ class CookieInformationRNSDKModule: NSObject {
       solutionId: config.solutionID,
       accentColor: config.accentColor,
       fontSet: fontSet,
-      enableNetworkLogger: config.logNetwork
+      networkLoggingMode: config.logNetwork ? .redactedRequestsAndResponses : .disabled
     )
 
     NSLog("CookieInformationRNSDK: SDK initialized")
