@@ -68,6 +68,28 @@ export interface IosUiOptions {
   /** Hex color like "#RRGGBB" or "#AARRGGBB". */
   accentColor?: string | null;
   fontSet?: FontSet | null;
+  /**
+   * iOS-only overrides for labels in the built-in consent UI, keyed by locale
+   * identifier (for example `da` or `en`).
+   * On Android, override the corresponding string resources in the app instead;
+   * Expo projects must add them through a config plugin during prebuild.
+   * Invalid locale entries or label values cause `initialize` to reject with
+   * `INVALID_INIT`.
+   */
+  localizationOverride?: Record<string, LabelText> | null;
+}
+
+/** iOS-only labels that can be overridden in the built-in consent UI. */
+export interface LabelText {
+  title?: string | null;
+  acceptAllButtonTitle?: string | null;
+  saveSelectionButtonTitle?: string | null;
+  privacyDescription?: string | null;
+  privacyPolicyLongtext?: string | null;
+  readMoreButton?: string | null;
+  requiredSectionHeader?: string | null;
+  optionalSectionHeader?: string | null;
+  readMoreScreenHeader?: string | null;
 }
 
 export interface FontSet {

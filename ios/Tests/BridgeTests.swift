@@ -180,6 +180,29 @@ struct BridgeTests {
     #expect(value == nil)
   }
 
+  @Test("initialize rejects an invalid localization override")
+  func initializeInvalidLocalizationOverride() async throws {
+    let module = CookieInformationRNSDKModule()
+    let options = NSMutableDictionary(dictionary: BridgeTestSupport.validInitOptions)
+    options["ui"] = [
+      "ios": [
+        "localizationOverride": [
+          "da": ["readMoreButton": 123],
+        ],
+      ],
+    ]
+
+    let outcome = try await awaitPromise { resolve, reject in
+      module.initialize(options, resolver: resolve, rejecter: reject)
+    }
+    guard case let .rejected(error) = outcome else {
+      Issue.record("Expected rejection")
+      return
+    }
+    #expect(error.code == "INVALID_INIT")
+    #expect(error.message == "readMoreButton for locale da must be a string or null")
+  }
+
   @Test("removeStoredConsents resolves after initialize")
   func removeStoredConsentsAfterInitialize() async throws {
     let module = CookieInformationRNSDKModule()

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.0]
 
+### Added
+
+- iOS built-in consent UI labels can be overridden per locale through
+  `ui.ios.localizationOverride` during `initialize()`.
+
 ### Changed
 
 - iOS `MobileConsentsSDK` `1.5.8` / `1.6.0` → `2.0.0`. Consent submission now matches Android's existing local-first behavior: successful callbacks confirm local persistence while server synchronization continues independently.

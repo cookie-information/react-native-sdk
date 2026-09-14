@@ -2,7 +2,67 @@ import Foundation
 import MobileConsentsSDK
 import UIKit
 
+enum UiParsingError: LocalizedError, Equatable {
+  case invalidLocalizationOverride
+  case invalidLocale(String)
+  case invalidLabels(String)
+  case invalidLabel(locale: String, field: String)
+
+  var errorDescription: String? {
+    switch self {
+    case .invalidLocalizationOverride:
+      return "ui.ios.localizationOverride must be an object keyed by locale"
+    case .invalidLocale(let locale):
+      return "Invalid locale identifier: \(locale)"
+    case .invalidLabels(let locale):
+      return "Localization override for \(locale) must be an object"
+    case .invalidLabel(let locale, let field):
+      return "\(field) for locale \(locale) must be a string or null"
+    }
+  }
+}
+
 enum UiParsing {
+  static func parseLocalizationOverride(_ rawValue: Any?) throws -> [Locale: LabelText] {
+    guard let rawValue = rawValue, !(rawValue is NSNull) else { return [:] }
+    guard let value = rawValue as? [String: Any] else {
+      throw UiParsingError.invalidLocalizationOverride
+    }
+
+    return try value.reduce(into: [Locale: LabelText]()) { result, entry in
+      let localeIdentifier = entry.key.trimmingCharacters(in: .whitespacesAndNewlines)
+      guard !localeIdentifier.isEmpty else {
+        throw UiParsingError.invalidLocale(entry.key)
+      }
+      guard let labels = entry.value as? [String: Any] else {
+        throw UiParsingError.invalidLabels(localeIdentifier)
+      }
+      result[Locale(identifier: localeIdentifier)] = LabelText(
+        title: try optionalString("title", from: labels, locale: localeIdentifier),
+        acceptAllButtonTitle: try optionalString("acceptAllButtonTitle", from: labels, locale: localeIdentifier),
+        saveSelectionButtonTitle: try optionalString("saveSelectionButtonTitle", from: labels, locale: localeIdentifier),
+        privacyDescription: try optionalString("privacyDescription", from: labels, locale: localeIdentifier),
+        privacyPolicyLongtext: try optionalString("privacyPolicyLongtext", from: labels, locale: localeIdentifier),
+        readMoreButton: try optionalString("readMoreButton", from: labels, locale: localeIdentifier),
+        requiredSectionHeader: try optionalString("requiredSectionHeader", from: labels, locale: localeIdentifier),
+        optionalSectionHeader: try optionalString("optionalSectionHeader", from: labels, locale: localeIdentifier),
+        readMoreScreenHeader: try optionalString("readMoreScreenHeader", from: labels, locale: localeIdentifier)
+      )
+    }
+  }
+
+  private static func optionalString(
+    _ key: String,
+    from labels: [String: Any],
+    locale: String
+  ) throws -> String? {
+    guard let value = labels[key], !(value is NSNull) else { return nil }
+    guard let string = value as? String else {
+      throw UiParsingError.invalidLabel(locale: locale, field: key)
+    }
+    return string
+  }
+
   static func parseHexColor(_ value: String?) -> UIColor? {
     guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines),
           value.hasPrefix("#") else {

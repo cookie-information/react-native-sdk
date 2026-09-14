@@ -5,6 +5,78 @@ import UIKit
 
 @Suite("UiParsing")
 struct UiParsingTests {
+  @Suite("parseLocalizationOverride")
+  struct ParseLocalizationOverrideTests {
+    @Test("returns an empty dictionary for nil")
+    func nilInput() throws {
+      #expect(try UiParsing.parseLocalizationOverride(nil).isEmpty)
+      #expect(try UiParsing.parseLocalizationOverride(NSNull()).isEmpty)
+    }
+
+    @Test("maps locale keys and all supported labels")
+    func supportedLabels() throws {
+      let overrides = try UiParsing.parseLocalizationOverride([
+        "da": [
+          "title": "Privatliv",
+          "acceptAllButtonTitle": "Accepter alle",
+          "saveSelectionButtonTitle": "Accepter valgte",
+          "privacyDescription": "Fortrolighedspolitik",
+          "privacyPolicyLongtext": "Lang beskrivelse",
+          "readMoreButton": "Fortrolighedspolitik",
+          "requiredSectionHeader": "Påkrævet",
+          "optionalSectionHeader": "Valgfrit",
+          "readMoreScreenHeader": "Privatlivspolitik",
+        ],
+      ])
+
+      let labels = overrides[Locale(identifier: "da")]
+      #expect(labels?.title == "Privatliv")
+      #expect(labels?.acceptAllButtonTitle == "Accepter alle")
+      #expect(labels?.saveSelectionButtonTitle == "Accepter valgte")
+      #expect(labels?.privacyDescription == "Fortrolighedspolitik")
+      #expect(labels?.privacyPolicyLongtext == "Lang beskrivelse")
+      #expect(labels?.readMoreButton == "Fortrolighedspolitik")
+      #expect(labels?.requiredSectionHeader == "Påkrævet")
+      #expect(labels?.optionalSectionHeader == "Valgfrit")
+      #expect(labels?.readMoreScreenHeader == "Privatlivspolitik")
+      #expect(overrides[Locale(identifier: "DA")]?.readMoreButton == "Fortrolighedspolitik")
+    }
+
+    @Test("rejects a non-object override")
+    func invalidOverride() {
+      let error = #expect(throws: UiParsingError.self) {
+        try UiParsing.parseLocalizationOverride("Læs mere")
+      }
+      #expect(error == .invalidLocalizationOverride)
+    }
+
+    @Test("rejects an empty locale identifier")
+    func emptyLocale() {
+      let error = #expect(throws: UiParsingError.self) {
+        try UiParsing.parseLocalizationOverride(["  ": [:]])
+      }
+      #expect(error == .invalidLocale("  "))
+    }
+
+    @Test("rejects entries that are not label objects")
+    func invalidEntry() {
+      let error = #expect(throws: UiParsingError.self) {
+        try UiParsing.parseLocalizationOverride(["da": "Læs mere"])
+      }
+      #expect(error == .invalidLabels("da"))
+    }
+
+    @Test("rejects label values that are not strings or null")
+    func invalidLabelValue() {
+      let error = #expect(throws: UiParsingError.self) {
+        try UiParsing.parseLocalizationOverride([
+          "da": ["readMoreButton": 123],
+        ])
+      }
+      #expect(error == .invalidLabel(locale: "da", field: "readMoreButton"))
+    }
+  }
+
   @Suite("parseHexColor")
   struct ParseHexColorTests {
     @Test("returns nil for nil")

@@ -70,6 +70,11 @@ await MobileConsent.initialize({
         body: { size: 14, weight: 'regular' },
         bold: { size: 14, weight: 'bold' },
       },
+      localizationOverride: {
+        da: {
+          readMoreButton: 'Fortrolighedspolitik',
+        },
+      },
     },
     android: {
       lightColorScheme: {
@@ -94,6 +99,14 @@ Notes:
 - Android `font` is a resource name under `android/app/src/main/res/font`.
 - Colors accept `#RRGGBB` or `#AARRGGBB`.
 - iOS uses system fonts if `name` is omitted.
+- iOS `localizationOverride` keys are locale identifiers matching the configured
+  language (for example `da`). Rebuild the native app after changing native SDK
+  configuration; JavaScript reload alone is not sufficient. Invalid locale
+  entries or label values cause `initialize` to reject with `INVALID_INIT`.
+- Android built-in labels come from Android string resources. To override the
+  Danish Read more label, define `read_more` in the app's `values-da/strings.xml`.
+  Expo projects that generate native folders must add that resource during
+  prebuild with a config plugin and create a new native build.
 
 ## Using built-in mobile consents UI
 
