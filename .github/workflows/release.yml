@@ -401,4 +401,4 @@ jobs:
       - name: Stage verified package on npm
         env:
           TARBALL: ${{ needs.package-stage.outputs.tarball }}
-        run: npm stage publish "release-package/$TARBALL" --access public
+        run: npm stage publish "./release-package/$TARBALL" --access public
