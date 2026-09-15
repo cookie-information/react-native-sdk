@@ -393,7 +393,3 @@ Notes:
 For additional customization options within MobileConsentsSDK, please contact our support team.
 
 If something is missing or you want to change something, let us know.
-
-## Release automation
-
-Publish by running the **Release** workflow (`workflow_dispatch`) and entering the version, for example `2.1.0`. CI validates the number, bumps `package.json` and the Android library version, runs lint, TypeScript, Jest, Android tests, and iOS tests, publishes to npm, then tags `X.Y.Z` (no `v` prefix) and creates a GitHub Release. Re-running the same version resumes whatever is missing (npm, tag, or GitHub Release) instead of requiring you to delete tags and commits.
