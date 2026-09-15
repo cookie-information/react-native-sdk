@@ -17,6 +17,7 @@ class CookieInformationRNSDKModule: NSObject {
     let logNetwork: Bool
     let accentColor: UIColor?
     let fontSet: FontSet?
+    let localizationOverride: [Locale: LabelText]
   }
 
   @objc static func requiresMainQueueSetup() -> Bool { return true }
@@ -43,6 +44,7 @@ class CookieInformationRNSDKModule: NSObject {
       solutionId: config.solutionID,
       accentColor: config.accentColor,
       fontSet: fontSet,
+      localizationOverride: config.localizationOverride,
       networkLoggingMode: config.logNetwork ? .redactedRequestsAndResponses : .disabled
     )
 
@@ -92,6 +94,15 @@ class CookieInformationRNSDKModule: NSObject {
     let iosUi = ui?["ios"] as? [String: Any]
     let accentColor = UiParsing.parseHexColor(iosUi?["accentColor"] as? String)
     let fontSet = UiParsing.parseFontSet(iosUi?["fontSet"] as? [String: Any])
+    let localizationOverride: [Locale: LabelText]
+    do {
+      localizationOverride = try UiParsing.parseLocalizationOverride(
+        iosUi?["localizationOverride"]
+      )
+    } catch {
+      reject("INVALID_INIT", error.localizedDescription, error)
+      return
+    }
     sdkConfig = SDKConfig(
       clientID: clientID,
       clientSecret: clientSecret,
@@ -99,7 +110,8 @@ class CookieInformationRNSDKModule: NSObject {
       languageCode: languageCode,
       logNetwork: logNetwork,
       accentColor: accentColor,
-      fontSet: fontSet
+      fontSet: fontSet,
+      localizationOverride: localizationOverride
     )
     configureSDK()
     resolve(nil)

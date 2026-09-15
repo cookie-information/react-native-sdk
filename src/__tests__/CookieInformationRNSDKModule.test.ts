@@ -23,7 +23,9 @@ jest.mock('react-native', () => ({
   },
 }));
 
-import MobileConsent from '../CookieInformationRNSDKModule';
+import MobileConsent, {
+  type InitializeOptions,
+} from '../CookieInformationRNSDKModule';
 
 describe('CookieInformationRNSDKModule', () => {
   beforeEach(() => {
@@ -41,7 +43,16 @@ describe('CookieInformationRNSDKModule', () => {
       solutionId: 'solution',
       languageCode: 'EN',
       enableNetworkLogger: true,
-    };
+      ui: {
+        ios: {
+          localizationOverride: {
+            da: {
+              readMoreButton: 'Fortrolighedspolitik',
+            },
+          },
+        },
+      },
+    } satisfies InitializeOptions;
     MobileConsent.initialize(options);
     expect(mockNative.initialize).toHaveBeenCalledWith(options);
   });
