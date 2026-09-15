@@ -1,6 +1,6 @@
 {
   "name": "@cookieinformation/react-native-sdk",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Cookie Information consent management SDK for React Native",
   "private": false,
   "main": "build/index.js",
