@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.dependency 'React-Core'
-  s.dependency 'MobileConsentsSDK', '1.5.8'
+  s.dependency 'MobileConsentsSDK', '2.0.0'
 
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
@@ -32,5 +32,7 @@ Pod::Spec.new do |s|
     test_spec.source_files = 'Tests/*Tests.swift'
     test_spec.platforms = { :ios => '15.1' }
     test_spec.requires_app_host = true
+    # The prebuilt React framework loads Hermes when the test bundle starts.
+    test_spec.dependency 'hermes-engine'
   end
 end

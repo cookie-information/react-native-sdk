@@ -2,7 +2,6 @@ package com.cookieinformation.rnsdk.example
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 class MainActivity : ReactActivity() {
@@ -10,5 +9,5 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "cookieinformationrnsdkexample"
 
   override fun createReactActivityDelegate(): ReactActivityDelegate =
-      DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+      DefaultReactActivityDelegate(this, mainComponentName)
 }

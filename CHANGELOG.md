@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0]
+
+### Changed
+
+- iOS `MobileConsentsSDK` `1.5.8` / `1.6.0` → `2.0.0`. Consent submission now matches Android's existing local-first behavior: successful callbacks confirm local persistence while server synchronization continues independently.
+- Example and development stack: React Native `0.87.1`, React `19.3.0`. Peer `react-native` range is now `>=0.79.0 <0.88.0`.
+- Android toolchain: Gradle `9.6.1`, AGP `9.4.0`, Kotlin `2.4.20`, `compileSdk` 37.
+- Dev tooling: ESLint 9 with `@react-native/eslint-config`, `lint-staged` 17, Jest `30.5.1`, Prettier `3.9.6`, plus lockfile security updates (`browserslist`, `brace-expansion`, `js-yaml`, `shell-quote`).
+
 ## [2.0.0] - 2026-06-03
 
 ### Breaking changes

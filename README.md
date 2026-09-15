@@ -11,7 +11,7 @@ Native SDKs:
 | Requirement | Version |
 | --- | --- |
 | `react` (peer dependency) | `>=19.0.0 <20` |
-| `react-native` (peer dependency) | `>=0.79.0 <0.87.0` |
+| `react-native` (peer dependency) | `>=0.79.0 <0.88.0` |
 | Node.js | `>=20` |
 | iOS | 15.1+ |
 | Android | API level 21+ (minSdk 21) |
@@ -185,7 +185,7 @@ if (consents.custom) {
 
 ### Handling errors
 
-Both `showPrivacyPopUp` and `showPrivacyPopUpIfNeeded` reject on error. If an error happens, the selection is still persisted locally and an attempt is made the next time `showPrivacyPopUpIfNeeded` or `synchronizeIfNeeded` is called.
+Both `showPrivacyPopUp` and `showPrivacyPopUpIfNeeded` reject if fetching, presentation, or local persistence fails. A resolved promise confirms that the selection was persisted locally, not that it reached the server. A failed upload after a successful local save does not reject; the SDK retries pending uploads during initialization, consent flows, and `synchronizeIfNeeded`.
 
 ```ts
 try {
@@ -393,7 +393,3 @@ Notes:
 For additional customization options within MobileConsentsSDK, please contact our support team.
 
 If something is missing or you want to change something, let us know.
-
-## Release automation
-
-- Release tags must match the `package.json` version (format `X.Y.Z`).

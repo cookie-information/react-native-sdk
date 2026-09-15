@@ -16,7 +16,7 @@ target 'cookieinformationrnsdkexample' do
   )
 
   pod 'CookieInformationRNSDK', :path => '../../ios'
-  pod 'MobileConsentsSDK', :git => 'https://github.com/cookie-information/ios-release.git', :tag => '1.5.8'
+  pod 'MobileConsentsSDK', :git => 'https://github.com/cookie-information/ios-release.git', :tag => '2.0.0'
 
   post_install do |installer|
     react_native_post_install(

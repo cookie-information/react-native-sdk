@@ -24,8 +24,8 @@ if [[ -f "${ENV_FILE}" ]]; then
   source "${ENV_FILE}"
 fi
 
-SIMULATOR="${IOS_SIMULATOR:-iPhone 16}"
-SIMULATOR_OS="${IOS_SIMULATOR_OS:-18.5}"
+SIMULATOR="${IOS_SIMULATOR:-iPhone 17 Pro}"
+SIMULATOR_OS="${IOS_SIMULATOR_OS:-latest}"
 DESTINATION="platform=iOS Simulator,name=${SIMULATOR},OS=${SIMULATOR_OS}"
 
 echo "Running iOS tests (${SCHEME}) on ${SIMULATOR} (${SIMULATOR_OS})..."
