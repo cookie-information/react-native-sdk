@@ -8,10 +8,6 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
-  id-token: write
-
 concurrency:
   group: release
   cancel-in-progress: false
@@ -22,22 +18,31 @@ env:
   NPM_PACKAGE: '@cookieinformation/react-native-sdk'
 
 jobs:
-  release:
-    name: Validate and release
+  validate-release:
+    name: Validate release
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    permissions:
+      contents: read
     runs-on: macos-26
     timeout-minutes: 60
+    outputs:
+      base_sha: ${{ steps.state.outputs.base_sha }}
+      tag_exists: ${{ steps.state.outputs.tag_exists }}
+      npm_exists: ${{ steps.state.outputs.npm_exists }}
+      release_exists: ${{ steps.state.outputs.release_exists }}
     steps:
-      - name: Checkout default branch
+      - name: Checkout default branch without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '22.21.0'
+          node-version: '22.22.1'
           registry-url: https://registry.npmjs.org/
           package-manager-cache: false
 
@@ -52,18 +57,21 @@ jobs:
         with:
           packages: platform-tools
 
-      - name: Validate version
+      - name: Validate source and inspect existing artifacts
+        id: state
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          if [ "$GITHUB_REF" != "refs/heads/$DEFAULT_BRANCH" ]; then
+            echo "Start a new release from the $DEFAULT_BRANCH branch."
+            exit 1
+          fi
+
           if [[ ! "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Version must use the X.Y.Z format without a v prefix."
             exit 1
           fi
 
-      - name: Inspect existing artifacts
-        id: state
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
           git fetch --tags origin
 
           TAG_EXISTS=false
@@ -72,6 +80,16 @@ jobs:
 
           if git show-ref --verify --quiet "refs/tags/$RELEASE_VERSION"; then
             TAG_EXISTS=true
+            TAG_PACKAGE_VERSION=$(git show "$RELEASE_VERSION:package.json" | node -p \
+              "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+            if [ "$TAG_PACKAGE_VERSION" != "$RELEASE_VERSION" ]; then
+              echo "Tag $RELEASE_VERSION contains package version $TAG_PACKAGE_VERSION."
+              exit 1
+            fi
+            if ! git merge-base --is-ancestor "$RELEASE_VERSION^{commit}" "origin/$DEFAULT_BRANCH"; then
+              echo "Tag $RELEASE_VERSION is not reachable from $DEFAULT_BRANCH."
+              exit 1
+            fi
           fi
 
           if npm view "$NPM_PACKAGE@$RELEASE_VERSION" version >/dev/null 2>&1; then
@@ -82,6 +100,7 @@ jobs:
             RELEASE_EXISTS=true
           fi
 
+          echo "base_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "tag_exists=$TAG_EXISTS" >> "$GITHUB_OUTPUT"
           echo "npm_exists=$NPM_EXISTS" >> "$GITHUB_OUTPUT"
           echo "release_exists=$RELEASE_EXISTS" >> "$GITHUB_OUTPUT"
@@ -93,18 +112,18 @@ jobs:
           fi
 
           if [[ "$TAG_EXISTS" != true ]]; then
-            latest="$(git tag --list '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1 || true)"
+            latest=$(git tag --list '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1 || true)
             if [[ -n "$latest" ]] && [[ "$(printf '%s\n%s\n' "$latest" "$RELEASE_VERSION" | sort -V | head -n 1)" == "$RELEASE_VERSION" ]] && [[ "$latest" != "$RELEASE_VERSION" ]]; then
               echo "Version $RELEASE_VERSION is older than existing tag $latest."
               exit 1
             fi
           fi
 
-      - name: Bump package version
+      - name: Bump package version locally
         if: steps.state.outputs.tag_exists != 'true'
-        run: npm version --no-git-tag-version "$RELEASE_VERSION"
+        run: npm version --ignore-scripts --no-git-tag-version --allow-same-version "$RELEASE_VERSION"
 
-      - name: Bump Android library version
+      - name: Bump Android library version locally
         if: steps.state.outputs.tag_exists != 'true'
         run: |
           python3 <<'PY'
@@ -124,35 +143,20 @@ jobs:
               name = re.search(r'versionName\s+"([^"]+)"', text)
               if name and name.group(1) == version:
                   return text
-              return re.sub(
-                  r"versionCode\s+\d+",
-                  f"versionCode {int(match.group(1)) + 1}",
-                  text,
-                  count=1,
-              )
+              return re.sub(r"versionCode\s+\d+", f"versionCode {int(match.group(1)) + 1}", text, count=1)
 
           for path in paths:
               source = open(path).read()
               updated = bump_code(source)
-              updated = re.sub(
-                  r"^version = '[^']+'",
-                  f"version = '{version}'",
-                  updated,
-                  count=1,
-                  flags=re.M,
-              )
-              updated = re.sub(
-                  r'versionName\s+"[^"]+"',
-                  f'versionName "{version}"',
-                  updated,
-                  count=1,
-              )
+              updated = re.sub(r"^version = '[^']+'", f"version = '{version}'", updated, count=1, flags=re.M)
+              updated = re.sub(r'versionName\s+"[^"]+"', f'versionName "{version}"', updated, count=1)
               open(path, "w").write(updated)
               if f'versionName "{version}"' not in updated:
                   raise SystemExit(f"Failed to set versionName in {path}")
           PY
 
       - name: Install dependencies
+        if: steps.state.outputs.tag_exists != 'true'
         run: npm ci
 
       - name: Verify package
@@ -175,28 +179,112 @@ jobs:
           set +a
           npm run test:ios
 
-      - name: Commit release version
-        if: steps.state.outputs.tag_exists != 'true'
+  write-release:
+    name: Commit, tag, and create GitHub release
+    needs: validate-release
+    permissions:
+      actions: write
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout default branch without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Setup Node
+        if: needs.validate-release.outputs.tag_exists != 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.1'
+          package-manager-cache: false
+
+      - name: Verify validated commit is still current
+        if: needs.validate-release.outputs.tag_exists != 'true'
+        env:
+          VALIDATED_SHA: ${{ needs.validate-release.outputs.base_sha }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- package.json package-lock.json android/build.gradle android/tests/react-native-cookie-information-rnsdk/build.gradle; then
-            echo "Release files already use version $RELEASE_VERSION."
-          else
-            git add package.json package-lock.json android/build.gradle android/tests/react-native-cookie-information-rnsdk/build.gradle
-            git commit -m "Release $RELEASE_VERSION"
+          CURRENT_SHA=$(git rev-parse HEAD)
+          if [ "$CURRENT_SHA" != "$VALIDATED_SHA" ]; then
+            echo "The default branch changed after validation. Run the release workflow again."
+            echo "Validated: $VALIDATED_SHA"
+            echo "Current:   $CURRENT_SHA"
+            exit 1
           fi
 
-      - name: Push commit and tag
-        if: steps.state.outputs.tag_exists != 'true'
+      - name: Create release version commit
+        if: needs.validate-release.outputs.tag_exists != 'true'
         run: |
+          npm version --ignore-scripts --no-git-tag-version --allow-same-version "$RELEASE_VERSION"
+
+          python3 <<'PY'
+          import os
+          import re
+
+          version = os.environ["RELEASE_VERSION"]
+          paths = [
+              "android/build.gradle",
+              "android/tests/react-native-cookie-information-rnsdk/build.gradle",
+          ]
+
+          def bump_code(text):
+              match = re.search(r"versionCode\s+(\d+)", text)
+              if match is None:
+                  raise SystemExit("Expected versionCode in Gradle file")
+              name = re.search(r'versionName\s+"([^"]+)"', text)
+              if name and name.group(1) == version:
+                  return text
+              return re.sub(r"versionCode\s+\d+", f"versionCode {int(match.group(1)) + 1}", text, count=1)
+
+          for path in paths:
+              source = open(path).read()
+              updated = bump_code(source)
+              updated = re.sub(r"^version = '[^']+'", f"version = '{version}'", updated, count=1, flags=re.M)
+              updated = re.sub(r'versionName\s+"[^"]+"', f'versionName "{version}"', updated, count=1)
+              open(path, "w").write(updated)
+          PY
+
+          EXPECTED=$(printf '%s\n' \
+            android/build.gradle \
+            android/tests/react-native-cookie-information-rnsdk/build.gradle \
+            package-lock.json \
+            package.json | LC_ALL=C sort)
+          ACTUAL=$(git status --short | cut -c4- | LC_ALL=C sort)
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "Unexpected release changes."
+            echo "Expected:"
+            echo "$EXPECTED"
+            echo "Actual:"
+            echo "$ACTUAL"
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            package.json \
+            package-lock.json \
+            android/build.gradle \
+            android/tests/react-native-cookie-information-rnsdk/build.gradle
+          git commit -m "Release $RELEASE_VERSION"
           git tag -a "$RELEASE_VERSION" -m "Release $RELEASE_VERSION"
+
+      - name: Push release commit and tag
+        if: needs.validate-release.outputs.tag_exists != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh auth setup-git
           git push --atomic origin \
             "HEAD:$DEFAULT_BRANCH" \
             "refs/tags/$RELEASE_VERSION"
 
       - name: Create GitHub Release
-        if: steps.state.outputs.release_exists != 'true'
+        if: needs.validate-release.outputs.release_exists != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -205,12 +293,112 @@ jobs:
             --title "$RELEASE_VERSION" \
             --generate-notes
 
+      - name: Start staged npm publishing from release tag
+        if: needs.validate-release.outputs.npm_exists != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run release.yml --ref "$RELEASE_VERSION" -f version="$RELEASE_VERSION"
+
+  package-stage:
+    name: Build package from release tag
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      tarball: ${{ steps.pack.outputs.tarball }}
+    steps:
+      - name: Checkout release tag without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.1'
+          package-manager-cache: false
+
+      - name: Validate release tag
+        run: |
+          if [ "$GITHUB_REF" != "refs/tags/$RELEASE_VERSION" ]; then
+            echo "Stage publishing must run from tag $RELEASE_VERSION, but it runs from $GITHUB_REF."
+            exit 1
+          fi
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          if [ "$PACKAGE_VERSION" != "$RELEASE_VERSION" ]; then
+            echo "package.json version $PACKAGE_VERSION does not match tag $RELEASE_VERSION."
+            exit 1
+          fi
+          if npm view "$NPM_PACKAGE@$RELEASE_VERSION" version >/dev/null 2>&1; then
+            echo "$NPM_PACKAGE@$RELEASE_VERSION is already published."
+            exit 1
+          fi
+
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+
+      - name: Verify and build package
+        run: |
+          npm run lint
+          npm run typescript
+          npm test
+          npm run build
+
+      - name: Create release tarball
+        id: pack
+        run: |
+          TARBALL=$(npm pack --ignore-scripts --json | node -e \
+            "let input = ''; process.stdin.on('data', chunk => input += chunk); process.stdin.on('end', () => console.log(JSON.parse(input)[0].filename));")
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+
+      - name: Upload verified release tarball
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-package-${{ inputs.version }}
+          path: ${{ steps.pack.outputs.tarball }}
+          if-no-files-found: error
+          retention-days: 1
+
+  stage-npm:
+    name: Stage package on npm
+    needs: package-stage
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.1'
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+
+      - name: Download verified release tarball
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-package-${{ inputs.version }}
+          path: release-package
+
+      - name: Validate release tarball
+        env:
+          TARBALL: ${{ needs.package-stage.outputs.tarball }}
+        run: |
+          PACKAGE_VERSION=$(tar -xOf "release-package/$TARBALL" package/package.json | node -p \
+            "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+          if [ "$PACKAGE_VERSION" != "$RELEASE_VERSION" ]; then
+            echo "Tarball version $PACKAGE_VERSION does not match $RELEASE_VERSION."
+            exit 1
+          fi
+
       - name: Install npm with staged publishing support
-        if: steps.state.outputs.npm_exists != 'true'
         run: npm install --global npm@11.19.1
 
-      - name: Stage package on npm
-        if: steps.state.outputs.npm_exists != 'true'
-        run: |
-          npm run build
-          npm stage publish --access public
+      - name: Stage verified package on npm
+        env:
+          TARBALL: ${{ needs.package-stage.outputs.tarball }}
+        run: npm stage publish "release-package/$TARBALL" --access public
